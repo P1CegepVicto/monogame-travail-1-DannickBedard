@@ -19,8 +19,6 @@ namespace Projet1
         GameObject bullet;
         GameObject background;
         Rectangle fenetre;
-        int compteur = 0;
-        int random = 0;
 
         Random de = new Random();
         public Game1()
@@ -68,14 +66,13 @@ namespace Projet1
             bad = new GameObject();
             bad.estVivant = true;
             bad.vitesse.X = -3;
-            bad.position.X = 3; 
+            bad.position.X = 500; 
             bad.sprite = Content.Load<Texture2D>("Boss.png");
 
             bullet = new GameObject();
             bullet.estVivant = true;
-            bullet.vitesse.Y = -150;
-            bullet.position.X = 500;
-            bullet.position.Y = 500;
+            bullet.vitesse.Y = -3;
+            bullet.vitesse.X = -3;
             bullet.sprite = Content.Load<Texture2D>("spaceMissiles_003.png");
 
 
@@ -139,11 +136,6 @@ namespace Projet1
             }
             #endregion
 
-            if (Keyboard.GetState().IsKeyDown(Keys.T))
-            {
-                bullet.position.Y += bullet.vitesse.Y;
-            }
-            
             // TODO: Add your update logic here
             #region Limite de fenetre
             if (heros.position.X < fenetre.Left)
@@ -163,16 +155,81 @@ namespace Projet1
                 heros.position.Y = fenetre.Bottom + graphics.GraphicsDevice.DisplayMode.Height-142;
             }
             #endregion
-
+            UpdateBullet();
             UpdateBad();
+            UpdateColision();
+            
         }
-        public void UpdateBullete()
+        public void UpdateColision()
         {
+            string accord="";
 
+            if (heros.GetRect().Intersects(bad.GetRect()))
+            {
+                 accord = "ok";
+                bad.vitesse.X = 0;
+                bad.estVivant = false;
+            }
+           if (bullet.GetRect().Intersects(bad.GetRect()))
+            {
+                bad.vitesse.X = 0;
+                bad.estVivant = false;
+                accord = "ok";
+            }
+            if (accord == "ok")
+            {
+                int random = 0;
+                string explosion = "";
+                Random de = new Random();
+                random = de.Next(0, 9);
+                if (random == 0)
+                {
+                    bad.sprite = Content.Load<Texture2D>("Explosion/explosion00.png");
+                }
+                else if (random == 1)
+                {
+                    bad.sprite = Content.Load<Texture2D>("Explosion/explosion01.png");
+                }
+                else if (random == 2)
+                {
+                    bad.sprite = Content.Load<Texture2D>("Explosion/explosion02.png");
+                }
+                else if (random == 3)
+                {
+                    bad.sprite = Content.Load<Texture2D>("Explosion/explosion03.png");
+                }
+                else if (random == 4)
+                {
+                    bad.sprite = Content.Load<Texture2D>("Explosion/explosion04.png");
+                }
+                else if (random == 5)
+                {
+                    bad.sprite = Content.Load<Texture2D>("Explosion/explosion05.png");
+                }
+                else if (random == 6)
+                {
+                    bad.sprite = Content.Load<Texture2D>("Explosion/explosion06.png");
+                }
+                else if (random == 7)
+                {
+                    bad.sprite = Content.Load<Texture2D>("Explosion/explosion07.png");
+                }
+            }
+        }
+        public void UpdateBullet()
+        {
+            
+            
+
+            if (Keyboard.GetState().IsKeyDown(Keys.T))
+            {
+                bullet.vitesse.Y = -15;
+                bullet.position.Y += -15;
+            }
+            
         }
         public void UpdateBad()
         {
-
             if (bad.position.X > fenetre.Right + graphics.GraphicsDevice.DisplayMode.Width - 300)
             {
                 bad.vitesse.X = -3;
@@ -183,8 +240,6 @@ namespace Projet1
             }
             bad.position.X += bad.vitesse.X;
         }
-
-        
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -194,11 +249,20 @@ namespace Projet1
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
 
-          
             spriteBatch.Draw(background.sprite, background.position, Color.White);
             spriteBatch.Draw(heros.sprite, heros.position, Color.White);
             spriteBatch.Draw(bad.sprite, bad.position, Color.WhiteSmoke);
-            spriteBatch.Draw(bullet.sprite, heros.position + bullet.position, Color.White);
+
+            if (Keyboard.GetState().IsKeyDown(Keys.T))
+            {
+                spriteBatch.Draw(bullet.sprite, bullet.position += bullet.vitesse, Color.White);
+
+            }
+            else
+            {
+                spriteBatch.Draw(bullet.sprite, bullet.position = heros.position, Color.White);
+            }
+            
 
             spriteBatch.End();
 
