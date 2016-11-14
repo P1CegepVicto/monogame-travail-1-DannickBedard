@@ -18,6 +18,7 @@ namespace Projet1
         GameObject bad;
         GameObject bullet;
         GameObject background;
+        GameObject explosion;
         Rectangle fenetre;
 
         Random de = new Random();
@@ -73,6 +74,15 @@ namespace Projet1
             bullet.estVivant = false;
             bullet.vitesse.Y = -3;
             bullet.sprite = Content.Load<Texture2D>("spaceMissiles_003.png");
+
+            explosion = new GameObject();
+            explosion.estVivant = false;
+            explosion.position.X = -500;
+            explosion.position.Y = -500;
+            explosion.sprite = Content.Load<Texture2D>("Explosion/explosion00.png");
+            
+           
+
             // TODO: use this.Content to load your game content here
         }
 
@@ -151,71 +161,103 @@ namespace Projet1
                 heros.position.Y = fenetre.Bottom + graphics.GraphicsDevice.DisplayMode.Height-142;
             }
             #endregion
-            UpdateBullet();
+            Respawn();
             UpdateBad();
             UpdateColision();
             
         }
+        //Colision entre mon héros et mon ennemi et ma balle
         public void UpdateColision()
         {
-            string accord="";
-
+            //Quand mon héros touche mon ennemi
             if (heros.GetRect().Intersects(bad.GetRect()))
             {
-                 accord = "ok";
+                bad.vitesse.X = de.Next(-4, 4);
                 bad.vitesse.X = 0;
+                explosion.estVivant = true;
                 bad.estVivant = false;
             }
+            //Quand ma balle touche mon ennemi
            if (bullet.GetRect().Intersects(bad.GetRect()))
             {
-                bad.vitesse.X = 0;
-                bad.estVivant = false;
-                accord = "ok";
+                bad.vitesse.X = de.Next(-4,4);
+                bad.estVivant = false;   
             }
+           //Si mon ennemi est touché
             if (bad.estVivant == false)
             {
                 bad.vitesse.Y = 2;
+                //Création d'une explosion
+                #region Explosion
                 int random = 0;
                 Random de = new Random();
                 random = de.Next(0, 9);
                 if (random == 0)
                 {
-                    bad.sprite = Content.Load<Texture2D>("Explosion/explosion00.png");
+                    explosion.sprite = Content.Load<Texture2D>("Explosion/explosion00.png");
+                    explosion.position.X = bad.position.X - 150;
+                    explosion.position.Y = bad.position.Y-50;
                 }
                 else if (random == 1)
                 {
-                    bad.sprite = Content.Load<Texture2D>("Explosion/explosion01.png");
+                    explosion.sprite = Content.Load<Texture2D>("Explosion/explosion01.png");
+                    explosion.position.X = bad.position.X - 150;
+                    explosion.position.Y = bad.position.Y-50;
                 }
                 else if (random == 2)
                 {
-                    bad.sprite = Content.Load<Texture2D>("Explosion/explosion02.png");
+                    explosion.sprite = Content.Load<Texture2D>("Explosion/explosion02.png");
+                    explosion.position.X = bad.position.X - 150;
+                    explosion.position.Y = bad.position.Y-50;
                 }
                 else if (random == 3)
                 {
-                    bad.sprite = Content.Load<Texture2D>("Explosion/explosion03.png");
+                    explosion.sprite = Content.Load<Texture2D>("Explosion/explosion03.png");
+                    explosion.position.X = bad.position.X - 150;
+                    explosion.position.Y = bad.position.Y-50;
                 }
                 else if (random == 4)
                 {
-                    bad.sprite = Content.Load<Texture2D>("Explosion/explosion04.png");
+                    explosion.sprite = Content.Load<Texture2D>("Explosion/explosion04.png");
+                    explosion.position.X = bad.position.X - 150;
+                    explosion.position.Y = bad.position.Y-50;
                 }
                 else if (random == 5)
                 {
-                    bad.sprite = Content.Load<Texture2D>("Explosion/explosion05.png");
+                    explosion.sprite = Content.Load<Texture2D>("Explosion/explosion05.png");
+                    explosion.position.X = bad.position.X - 150;
+                    explosion.position.Y = bad.position.Y-50;
                 }
                 else if (random == 6)
                 {
-                    bad.sprite = Content.Load<Texture2D>("Explosion/explosion06.png");
+                    explosion.sprite = Content.Load<Texture2D>("Explosion/explosion06.png");
+                    explosion.position.X = bad.position.X - 150;
+                    explosion.position.Y = bad.position.Y-50;
                 }
                 else if (random == 7)
                 {
-                    bad.sprite = Content.Load<Texture2D>("Explosion/explosion07.png");
+                    explosion.sprite = Content.Load<Texture2D>("Explosion/explosion07.png");
+                    explosion.position.X = bad.position.X - 150;
+                    explosion.position.Y = bad.position.Y-50;
                 }
+                #endregion
             }
         }
-        public void UpdateBullet()
+        //faire respawn mon ennemi
+        public void Respawn()
         {
-          
+            if (bad.position.Y > (fenetre.Bottom + graphics.GraphicsDevice.DisplayMode.Height - 300))
+            {
+                bad.estVivant = true;
+                bad.vitesse.X = -3;
+                bad.vitesse.Y = 0;
+                bad.position.Y = 0;
+                bad.position.X = 500;
+                explosion.position.X = -500;
+                explosion.position.Y = -500;
+            }
         }
+
         public void UpdateBad()
         {
             if (bad.position.X > fenetre.Right + graphics.GraphicsDevice.DisplayMode.Width - 300)
@@ -242,7 +284,9 @@ namespace Projet1
             spriteBatch.Draw(heros.sprite, heros.position, Color.White);
             spriteBatch.Draw(bad.sprite, bad.position, Color.WhiteSmoke);
             spriteBatch.Draw(bullet.sprite, bullet.position += bullet.vitesse, Color.White);
+            spriteBatch.Draw(explosion.sprite, explosion.position, Color.FloralWhite);
 
+            //Quand j'appuis sur ma touche t
             if (Keyboard.GetState().IsKeyDown(Keys.T))
             {
                 bullet.estVivant = false;
@@ -250,22 +294,17 @@ namespace Projet1
                 if (bullet.estVivant == false)
                 {
                     bullet.position.Y += -15;
-
+                    //affiche la trajectoire de ma balle en temps réel
                     spriteBatch.Draw(bullet.sprite, bullet.position += bullet.vitesse, Color.White);
+                    //si ma balle arrive en haut de ma fenetre
                     if (bullet.position.Y < fenetre.Top)
                     {
+                        //Affiche ma balle a la position de mon heros
                         spriteBatch.Draw(bullet.sprite, bullet.position = heros.position, Color.White);
-
                         bullet.estVivant = true;
                     }
                 }
             }
-            else
-            {
-               
-            }
-            
-
             spriteBatch.End();
 
             // TODO: Add your drawing code here
