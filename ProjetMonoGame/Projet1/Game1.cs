@@ -70,13 +70,9 @@ namespace Projet1
             bad.sprite = Content.Load<Texture2D>("Boss.png");
 
             bullet = new GameObject();
-            bullet.estVivant = true;
+            bullet.estVivant = false;
             bullet.vitesse.Y = -3;
-            bullet.vitesse.X = -3;
             bullet.sprite = Content.Load<Texture2D>("spaceMissiles_003.png");
-
-
-
             // TODO: use this.Content to load your game content here
         }
 
@@ -176,10 +172,10 @@ namespace Projet1
                 bad.estVivant = false;
                 accord = "ok";
             }
-            if (accord == "ok")
+            if (bad.estVivant == false)
             {
+                bad.vitesse.Y = 2;
                 int random = 0;
-                string explosion = "";
                 Random de = new Random();
                 random = de.Next(0, 9);
                 if (random == 0)
@@ -218,15 +214,7 @@ namespace Projet1
         }
         public void UpdateBullet()
         {
-            
-            
-
-            if (Keyboard.GetState().IsKeyDown(Keys.T))
-            {
-                bullet.vitesse.Y = -15;
-                bullet.position.Y += -15;
-            }
-            
+          
         }
         public void UpdateBad()
         {
@@ -239,6 +227,7 @@ namespace Projet1
                 bad.vitesse.X = 3;
             }
             bad.position.X += bad.vitesse.X;
+            bad.position.Y += bad.vitesse.Y;
         }
         /// <summary>
         /// This is called when the game should draw itself.
@@ -252,15 +241,28 @@ namespace Projet1
             spriteBatch.Draw(background.sprite, background.position, Color.White);
             spriteBatch.Draw(heros.sprite, heros.position, Color.White);
             spriteBatch.Draw(bad.sprite, bad.position, Color.WhiteSmoke);
+            spriteBatch.Draw(bullet.sprite, bullet.position += bullet.vitesse, Color.White);
 
             if (Keyboard.GetState().IsKeyDown(Keys.T))
             {
-                spriteBatch.Draw(bullet.sprite, bullet.position += bullet.vitesse, Color.White);
+                bullet.estVivant = false;
+                bullet.vitesse.Y = -25;
+                if (bullet.estVivant == false)
+                {
+                    bullet.position.Y += -15;
 
+                    spriteBatch.Draw(bullet.sprite, bullet.position += bullet.vitesse, Color.White);
+                    if (bullet.position.Y < fenetre.Top)
+                    {
+                        spriteBatch.Draw(bullet.sprite, bullet.position = heros.position, Color.White);
+
+                        bullet.estVivant = true;
+                    }
+                }
             }
             else
             {
-                spriteBatch.Draw(bullet.sprite, bullet.position = heros.position, Color.White);
+               
             }
             
 
