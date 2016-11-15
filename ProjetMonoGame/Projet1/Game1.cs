@@ -17,6 +17,7 @@ namespace Projet1
         GameObject heros;
         GameObject bad;
         GameObject bullet;
+        GameObject badBullet;
         GameObject background;
         GameObject explosion;
         Rectangle fenetre;
@@ -38,8 +39,9 @@ namespace Projet1
         {
             // TODO: Add your initialization logic here
             this.graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
-            this.graphics.PreferredBackBufferHeight  = graphics.GraphicsDevice.DisplayMode.Height;
+            this.graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
             this.graphics.ApplyChanges();
+            //this.graphics.ToggleFullScreen();
             base.Initialize();
         }
 
@@ -67,7 +69,7 @@ namespace Projet1
             bad = new GameObject();
             bad.estVivant = true;
             bad.vitesse.X = -3;
-            bad.position.X = 500; 
+            bad.position.X = 500;
             bad.sprite = Content.Load<Texture2D>("Boss.png");
 
             bullet = new GameObject();
@@ -75,13 +77,19 @@ namespace Projet1
             bullet.vitesse.Y = -3;
             bullet.sprite = Content.Load<Texture2D>("spaceMissiles_003.png");
 
+            badBullet = new GameObject();
+            badBullet.estVivant = false;
+            badBullet.vitesse.Y = 10;
+            badBullet.position = bad.position;
+            badBullet.sprite = Content.Load<Texture2D>("balleBad.png");
+
             explosion = new GameObject();
             explosion.estVivant = false;
             explosion.position.X = -500;
             explosion.position.Y = -500;
             explosion.sprite = Content.Load<Texture2D>("Explosion/explosion00.png");
-            
-           
+
+
 
             // TODO: use this.Content to load your game content here
         }
@@ -103,41 +111,52 @@ namespace Projet1
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             #region mouvement heros
-            if (Keyboard.GetState().IsKeyDown(Keys.W))
+            if (heros.estVivant == true)
             {
-                heros.position.Y += -2;
-                if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                if (Keyboard.GetState().IsKeyDown(Keys.W))
                 {
-                    heros.position.Y += -10;
+                    heros.vitesse.Y = -2;
+                    heros.position.Y += heros.vitesse.Y;
+                    if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                    {
+                        heros.vitesse.Y = -10;
+                        heros.position.Y += heros.vitesse.Y;
+                    }
                 }
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.S))
-            {
-                heros.position.Y += 2;
-                if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                if (Keyboard.GetState().IsKeyDown(Keys.S))
                 {
-                    heros.position.Y += 10;
+                    heros.vitesse.Y = 2;
+                    heros.position.Y += heros.vitesse.Y;
+                    if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                    {
+                        heros.vitesse.Y = 10;
+                        heros.position.Y += heros.vitesse.Y;
+                    }
                 }
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.A))
-            {
-                heros.position.X += -2;
-                if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                if (Keyboard.GetState().IsKeyDown(Keys.A))
                 {
-                    heros.position.X += -10;
+                    heros.vitesse.X = -2;
+                    heros.position.X += heros.vitesse.X;
+                    if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                    {
+                        heros.vitesse.X = -10;
+                        heros.position.X += heros.vitesse.X;
+                    }
                 }
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.D))
-            {
-                heros.position.X += 2;
-                if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                if (Keyboard.GetState().IsKeyDown(Keys.D))
                 {
-                    heros.position.X += 10;
+                    heros.vitesse.X = 2;
+                    heros.position.X += heros.vitesse.X;
+                    if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                    {
+                        heros.vitesse.X = 10;
+                        heros.position.X += heros.vitesse.X;
+                    }
                 }
             }
             #endregion
@@ -152,24 +171,33 @@ namespace Projet1
             {
                 heros.position.Y = fenetre.Top;
             }
-            if (heros.position.X > (fenetre.Right +graphics.GraphicsDevice.DisplayMode.Width-183))
+            if (heros.position.X > (fenetre.Right + graphics.GraphicsDevice.DisplayMode.Width - 183))
             {
-                heros.position.X = fenetre.Right + graphics.GraphicsDevice.DisplayMode.Width-183;
+                heros.position.X = fenetre.Right + graphics.GraphicsDevice.DisplayMode.Width - 183;
             }
-            if (heros.position.Y > (fenetre.Bottom + graphics.GraphicsDevice.DisplayMode.Height-142))
+            if (heros.position.Y > (fenetre.Bottom + graphics.GraphicsDevice.DisplayMode.Height - 142))
             {
-                heros.position.Y = fenetre.Bottom + graphics.GraphicsDevice.DisplayMode.Height-142;
+                heros.position.Y = fenetre.Bottom + graphics.GraphicsDevice.DisplayMode.Height - 142;
             }
             #endregion
             Respawn();
             UpdateBad();
             UpdateColision();
-            
+
         }
         //Colision entre mon héros et mon ennemi et ma balle
         public void UpdateColision()
         {
             //Quand mon héros touche mon ennemi
+            if (heros.GetRect().Intersects(badBullet.GetRect()))
+            {
+                heros.estVivant = false;
+                heros.vitesse.X = 0;
+                heros.vitesse.Y = 0;
+                heros.position.X += heros.vitesse.X;
+                heros.position.Y += heros.vitesse.Y;
+            }
+
             if (heros.GetRect().Intersects(bad.GetRect()))
             {
                 bad.vitesse.X = de.Next(-4, 4);
@@ -178,12 +206,12 @@ namespace Projet1
                 bad.estVivant = false;
             }
             //Quand ma balle touche mon ennemi
-           if (bullet.GetRect().Intersects(bad.GetRect()))
+            if (bullet.GetRect().Intersects(bad.GetRect()))
             {
-                bad.vitesse.X = de.Next(-4,4);
-                bad.estVivant = false;   
+                bad.vitesse.X = de.Next(-4, 4);
+                bad.estVivant = false;
             }
-           //Si mon ennemi est touché
+            //Si mon ennemi est touché
             if (bad.estVivant == false)
             {
                 bad.vitesse.Y = 2;
@@ -196,49 +224,49 @@ namespace Projet1
                 {
                     explosion.sprite = Content.Load<Texture2D>("Explosion/explosion00.png");
                     explosion.position.X = bad.position.X - 150;
-                    explosion.position.Y = bad.position.Y-50;
+                    explosion.position.Y = bad.position.Y - 50;
                 }
                 else if (random == 1)
                 {
                     explosion.sprite = Content.Load<Texture2D>("Explosion/explosion01.png");
                     explosion.position.X = bad.position.X - 150;
-                    explosion.position.Y = bad.position.Y-50;
+                    explosion.position.Y = bad.position.Y - 50;
                 }
                 else if (random == 2)
                 {
                     explosion.sprite = Content.Load<Texture2D>("Explosion/explosion02.png");
                     explosion.position.X = bad.position.X - 150;
-                    explosion.position.Y = bad.position.Y-50;
+                    explosion.position.Y = bad.position.Y - 50;
                 }
                 else if (random == 3)
                 {
                     explosion.sprite = Content.Load<Texture2D>("Explosion/explosion03.png");
                     explosion.position.X = bad.position.X - 150;
-                    explosion.position.Y = bad.position.Y-50;
+                    explosion.position.Y = bad.position.Y - 50;
                 }
                 else if (random == 4)
                 {
                     explosion.sprite = Content.Load<Texture2D>("Explosion/explosion04.png");
                     explosion.position.X = bad.position.X - 150;
-                    explosion.position.Y = bad.position.Y-50;
+                    explosion.position.Y = bad.position.Y - 50;
                 }
                 else if (random == 5)
                 {
                     explosion.sprite = Content.Load<Texture2D>("Explosion/explosion05.png");
                     explosion.position.X = bad.position.X - 150;
-                    explosion.position.Y = bad.position.Y-50;
+                    explosion.position.Y = bad.position.Y - 50;
                 }
                 else if (random == 6)
                 {
                     explosion.sprite = Content.Load<Texture2D>("Explosion/explosion06.png");
                     explosion.position.X = bad.position.X - 150;
-                    explosion.position.Y = bad.position.Y-50;
+                    explosion.position.Y = bad.position.Y - 50;
                 }
                 else if (random == 7)
                 {
                     explosion.sprite = Content.Load<Texture2D>("Explosion/explosion07.png");
                     explosion.position.X = bad.position.X - 150;
-                    explosion.position.Y = bad.position.Y-50;
+                    explosion.position.Y = bad.position.Y - 50;
                 }
                 #endregion
             }
@@ -260,6 +288,13 @@ namespace Projet1
 
         public void UpdateBad()
         {
+            if (badBullet.estVivant == true)
+            {
+                badBullet.position = bad.position;
+                badBullet.vitesse.Y = -25;
+                
+            }
+
             if (bad.position.X > fenetre.Right + graphics.GraphicsDevice.DisplayMode.Width - 300)
             {
                 bad.vitesse.X = -3;
@@ -286,6 +321,20 @@ namespace Projet1
             spriteBatch.Draw(bullet.sprite, bullet.position += bullet.vitesse, Color.White);
             spriteBatch.Draw(explosion.sprite, explosion.position, Color.FloralWhite);
 
+            spriteBatch.Draw(badBullet.sprite, badBullet.position += badBullet.vitesse, Color.White);
+
+            if (badBullet.position.Y > (fenetre.Bottom + graphics.GraphicsDevice.DisplayMode.Height - 128))
+            {
+                badBullet.estVivant = true;
+                if (badBullet.estVivant == true)
+                {
+                    badBullet.position = bad.position;
+                    spriteBatch.Draw(badBullet.sprite, badBullet.position = bad.position, Color.White);
+                    badBullet.estVivant = false;
+
+                }
+                
+            }
             //Quand j'appuis sur ma touche t
             if (Keyboard.GetState().IsKeyDown(Keys.T))
             {
@@ -313,3 +362,4 @@ namespace Projet1
         }
     }
 }
+
