@@ -23,6 +23,7 @@ namespace Projet1
         GameObject explosion;
         GameObject explosion2;
         GameObject coeur;
+        GameObject coeurE;
         Rectangle fenetre;
    
         Random de = new Random();
@@ -77,7 +78,7 @@ namespace Projet1
             bad.estVivant = true;
             bad.vitesse.X = -3;
             bad.position.X = 500;
-            bad.vie = 1000;
+            bad.vie = 100;
             bad.sprite = Content.Load<Texture2D>("Boss.png");
             #endregion
             #region Bullet
@@ -111,9 +112,15 @@ namespace Projet1
             coeur.estVivant = true;
             coeur.position.X = 0;
             coeur.position.Y = 500;
-            coeur.sprite = Content.Load<Texture2D>("Coeur10px.png");
+            coeur.sprite = Content.Load<Texture2D>("CoeurHeros/Coeur10px.png");
             #endregion
-
+            #region coeur mechant
+            coeurE = new GameObject();
+            coeurE.estVivant = true;
+            coeurE.position.X = 0;
+            coeurE.position.Y = 200;
+            coeurE.sprite = Content.Load<Texture2D>("CoeurNoir/CoeurMchant.png");
+            #endregion
             // TODO: use this.Content to load your game content here
         }
 
@@ -136,12 +143,9 @@ namespace Projet1
         {
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+                Environment.Exit(0);
+
             // TODO: Add your update logic here
-
-
-
-
             UpdateHeros();
             Respawn();
             UpdateBad();
@@ -196,7 +200,8 @@ namespace Projet1
                 }
             }
             #endregion
-            #region Limite de fenetre
+
+            //Limite de fentre pour mon héros
             if (heros.position.X < fenetre.Left)
             {
                 heros.position.X = fenetre.Left;
@@ -213,7 +218,7 @@ namespace Projet1
             {
                 heros.position.Y = fenetre.Bottom + graphics.GraphicsDevice.DisplayMode.Height - 142;
             }
-            #endregion
+            
         }
         public void UpdateTireHeros()
         {
@@ -236,13 +241,9 @@ namespace Projet1
                     }
                     if (bullet.GetRect().Intersects(bad.GetRect()))
                     {
-
-                        bad.vie = bad.vie - 10;
-                        spriteBatch.Draw(bullet.sprite, bullet.position = heros.position, Color.White);
-                        if (bad.vie <= 0)
-                        {
-                            bad.estVivant = false;
-                        }
+                        bad.vie = bad.vie - 1;
+                        //Lorsque ma balle touhe mon ennemi elle retourne sur mon héros
+                        bullet.position = heros.position;
                     }
                 }
             }
@@ -282,13 +283,8 @@ namespace Projet1
 
             }
         }
-
-        //Colision entre tour les choses (balle,heros,ennemi,etc)
-        public void UpdateColision()
+        public void UpdateCoeurHerosColision()
         {
-            int random = 0;
-            //Quand mon ennemi touche mon héros
-            #region Colision heros vs bullet bad
             if (heros.GetRect().Intersects(badBullet.GetRect()))
             {
                 //Lorsque la balle touche le heros elle vas tout de suite sur mon ennemi
@@ -296,86 +292,168 @@ namespace Projet1
                 //Des dégat de -10 vie a chaque hit pas l'ennemi
                 heros.vie = heros.vie - 10;
                 //Annimation pour le coeur
-                #region coeur
-                if(heros.vie == 100)
+                if (heros.vie == 100)
                 {
-                    coeur.sprite = Content.Load<Texture2D>("Coeur10px.png");
+                    coeur.sprite = Content.Load<Texture2D>("CoeurHeros/Coeur10px.png");
                     coeur.position.X = 0;
                     coeur.position.Y = 500;
                 }
                 if (heros.vie == 90)
                 {
-                    coeur.sprite = Content.Load<Texture2D>("Coeur910.png");
+                    coeur.sprite = Content.Load<Texture2D>("CoeurHeros/Coeur910.png");
                     coeur.position.X = 0;
                     coeur.position.Y = 500;
                 }
                 if (heros.vie == 80)
                 {
-                    coeur.sprite = Content.Load<Texture2D>("Coeur810.png");
+                    coeur.sprite = Content.Load<Texture2D>("CoeurHeros/Coeur810.png");
                     coeur.position.X = 0;
                     coeur.position.Y = 500;
                 }
                 if (heros.vie == 70)
                 {
-                    coeur.sprite = Content.Load<Texture2D>("Coeur710.png");
+                    coeur.sprite = Content.Load<Texture2D>("CoeurHeros/Coeur710.png");
                     coeur.position.X = 0;
                     coeur.position.Y = 500;
                 }
                 if (heros.vie == 60)
                 {
-                    coeur.sprite = Content.Load<Texture2D>("Coeur610.png");
+                    coeur.sprite = Content.Load<Texture2D>("CoeurHeros/Coeur610.png");
                     coeur.position.X = 0;
                     coeur.position.Y = 500;
                 }
                 if (heros.vie == 50)
                 {
-                    coeur.sprite = Content.Load<Texture2D>("CoeurMoitier.png");
+                    coeur.sprite = Content.Load<Texture2D>("CoeurHeros/CoeurMoitier.png");
                     coeur.position.X = 0;
                     coeur.position.Y = 500;
                 }
                 if (heros.vie == 40)
                 {
-                    coeur.sprite = Content.Load<Texture2D>("Coeur410.png");
+                    coeur.sprite = Content.Load<Texture2D>("CoeurHeros/Coeur410.png");
                     coeur.position.X = 0;
                     coeur.position.Y = 500;
                 }
                 if (heros.vie == 30)
                 {
-                    coeur.sprite = Content.Load<Texture2D>("Coeur310.png");
+                    coeur.sprite = Content.Load<Texture2D>("CoeurHeros/Coeur310.png");
                     coeur.position.X = 0;
                     coeur.position.Y = 500;
                 }
                 if (heros.vie == 20)
                 {
-                    coeur.sprite = Content.Load<Texture2D>("Coeur210.png");
+                    coeur.sprite = Content.Load<Texture2D>("CoeurHeros/Coeur210.png");
                     coeur.position.X = 0;
                     coeur.position.Y = 500;
                 }
                 if (heros.vie == 10)
                 {
-                    coeur.sprite = Content.Load<Texture2D>("Coeur110.png");
+                    coeur.sprite = Content.Load<Texture2D>("CoeurHeros/Coeur110.png");
                     coeur.position.X = 0;
                     coeur.position.Y = 500;
                 }
-
                 if (heros.vie <= 0)
                 {
-                    coeur.sprite = Content.Load<Texture2D>("Coeurvide.png");
+                    coeur.sprite = Content.Load<Texture2D>("CoeurHeros/Coeurvide.png");
                     coeur.position.X = 0;
                     coeur.position.Y = 500;
                     heros.estVivant = false;
                 }
-                #endregion
             }
+        }
+        public void UpdateBadCoeur()
+        {
+            /// <summary
+            /// Pour changer les degats des ballse du héros sa vas être dans "UpdateTireHeros()"
+            /// </summary
+
+            if (bad.vie == 100)
+            {
+                coeurE.sprite = Content.Load<Texture2D>("CoeurNoir/CoeurMchant.png");
+                coeurE.position.X = 0;
+                coeurE.position.Y = 200;
+            }
+            if (bad.vie == 90)
+            {
+                coeurE.sprite = Content.Load<Texture2D>("CoeurNoir/CoeurM910.png");
+                coeurE.position.X = 0;
+                coeurE.position.Y = 200;
+            }
+            if (bad.vie == 80)
+            {
+                coeurE.sprite = Content.Load<Texture2D>("CoeurNoir/CoeurM810.png");
+                coeurE.position.X = 0;
+                coeurE.position.Y = 200;
+            }
+            if (bad.vie == 70)
+            {
+                coeurE.sprite = Content.Load<Texture2D>("CoeurNoir/CoeurM710.png");
+                coeurE.position.X = 0;
+                coeurE.position.Y = 200;
+            }
+            if (bad.vie == 60)
+            {
+                coeurE.sprite = Content.Load<Texture2D>("CoeurNoir/CoeurM610.png");
+                coeurE.position.X = 0;
+                coeurE.position.Y = 200;
+            }
+            if (bad.vie == 50)
+            {
+                coeurE.sprite = Content.Load<Texture2D>("CoeurNoir/CoeurM510.png");
+                coeurE.position.X = 0;
+                coeurE.position.Y = 200;
+            }
+            if (bad.vie == 40)
+            {
+                coeurE.sprite = Content.Load<Texture2D>("CoeurNoir/CoeurM410.png");
+                coeurE.position.X = 0;
+                coeurE.position.Y = 200;
+            }
+            if (bad.vie == 30)
+            {
+                coeurE.sprite = Content.Load<Texture2D>("CoeurNoir/CoeurM310.png");
+                coeurE.position.X = 0;
+                coeurE.position.Y = 200;
+            }
+            if (bad.vie == 20)
+            {
+                coeurE.sprite = Content.Load<Texture2D>("CoeurNoir/CoeurM210.png");
+                coeurE.position.X = 0;
+                coeurE.position.Y = 200;
+            }
+            if (bad.vie == 10)
+            {
+                coeurE.sprite = Content.Load<Texture2D>("CoeurNoir/CoeurM110.png");
+                coeurE.position.X = 0;
+                coeurE.position.Y = 200;
+            }
+
+            if (bad.vie <= 0)
+            {
+                coeurE.sprite = Content.Load<Texture2D>("CoeurNoir/CoeurMV.png");
+                coeurE.position.X = 0;
+                coeurE.position.Y = 200;
+                bad.estVivant = false;
+            }
+        }
+
+        //Colision entre tour les choses (balle,heros,ennemi,etc)
+        public void UpdateColision()
+        {
+            int random = 0;
+            //Création d'un logo vie + Colision entre les balles de mon ennemi et mon héros
+            UpdateCoeurHerosColision();
+
             if (heros.GetRect().Intersects(bad.GetRect()))
             {
                 //Si mon heros touche mon ennemi, coup critique de 100 point de dommage
                 coeur.position.X = 0;
                 coeur.position.Y = 500;
-                coeur.sprite = Content.Load<Texture2D>("CoeurVide.png");
+                coeur.sprite = Content.Load<Texture2D>("CoeurHeros/CoeurVide.png");
                 heros.estVivant = false;
             }
 
+            #region ExplosionHéros
             if (heros.estVivant == false)
             {
                 //Crée un random pour donner une animation a mon explosion
@@ -384,7 +462,7 @@ namespace Projet1
                 heros.vitesse.Y = 4;
                 heros.position.X += heros.vitesse.X;
                 heros.position.Y += heros.vitesse.Y;
-                #region Explosion Héros
+               
                 if (random == 0)
                 {
                     explosion2.sprite = Content.Load<Texture2D>("Explosion/explosion00.png");
@@ -433,22 +511,21 @@ namespace Projet1
                     explosion2.position.X = heros.position.X - 180;
                     explosion2.position.Y = heros.position.Y - 80;
                 }
-                #endregion
-            }
+                
+               
+            } 
             #endregion
-            //Quand mon héros touche mon ennemi
-            #region Colision bad
-            if (heros.GetRect().Intersects(bad.GetRect()))
-            {
-                explosion2.estVivant = true;
-                heros.estVivant = false;
-            }
-            //Quand ma balle touche mon ennemi
-            
-            //Si mon ennemi est touché
+
+
+
+            //Coeur de mon ennemi Pour modification "UpdatebadCoeur()"
+            UpdateBadCoeur();
+            //Si mon ennemi est Mort
             if (bad.estVivant == false)
             {
+                //vitesse.Y est mise a 2 pour faire descendre mon ennemi lentement
                 bad.vitesse.Y = 2;
+
                 //Création d'une explosion
                 #region Explosion
                 
@@ -504,16 +581,13 @@ namespace Projet1
                     explosion.position.Y = bad.position.Y - 50;
                 }
                 #endregion
-                #endregion
+                
             }
         }
 
         //faire respawn mon ennemi && Heros
-        
-        
         public void Respawn()
         {
-            
             if (bad.position.Y > (fenetre.Bottom + graphics.GraphicsDevice.DisplayMode.Height - 300))
             {
                 bad.estVivant = true;
@@ -526,8 +600,10 @@ namespace Projet1
                 //Cache l'image de l'explosion
                 explosion.position.X = -500;
                 explosion.position.Y = -500;
+               
                 //Remet la vie de mon ennemi a 100%
-                bad.vie = 10000*2;
+                 bad.vie = 100;
+                coeurE.sprite = Content.Load<Texture2D>("CoeurNoir/CoeurMchant.png");
             }
             if (heros.estVivant == false)
             {
@@ -545,14 +621,12 @@ namespace Projet1
                     explosion2.position.Y = -500;
                     heros.vie = 100;
                     //Fait remmetre mon coeur à 100%
-                    coeur.sprite = Content.Load<Texture2D>("Coeur10px.png");
+                    coeur.sprite = Content.Load<Texture2D>("CoeurHeros/Coeur10px.png");
                     coeur.position.X = 0;
                     coeur.position.Y = 500 ;
-                    
                 }
             }
         }
-
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -571,16 +645,13 @@ namespace Projet1
             spriteBatch.Draw(explosion2.sprite, explosion2.position, Color.FloralWhite);
             spriteBatch.Draw(badBullet.sprite, badBullet.position += badBullet.vitesse, Color.White);
             spriteBatch.Draw(coeur.sprite, coeur.position, Color.White);
+            spriteBatch.Draw(coeurE.sprite, coeurE.position, Color.White);
             
             UpdateBulletEnnemi();
             //Quand j'appuis sur ma touche t
             UpdateTireHeros();
             
-
             spriteBatch.End();
-
-           
-
             base.Draw(gameTime);
         }
     }
