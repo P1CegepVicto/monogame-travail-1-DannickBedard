@@ -10,12 +10,12 @@ namespace Projet1
 {
     class GameObject
     {
+        public int vie;
         public bool estVivant;
         public Texture2D sprite;
         public Vector2 position;
         public Vector2 vitesse;
         public Rectangle rectColision = new Rectangle();
-
         public Rectangle GetRect()
         {
             rectColision.X = (int)this.position.X;
