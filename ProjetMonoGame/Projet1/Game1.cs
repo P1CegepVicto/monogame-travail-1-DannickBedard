@@ -86,6 +86,7 @@ namespace Projet1
             bullet.estVivant = false;
             bullet.vitesse.Y = -3;
             bullet.sprite = Content.Load<Texture2D>("spaceMissiles_003.png");
+            
             #endregion
             #region BulletBad
             badBullet = new GameObject();
