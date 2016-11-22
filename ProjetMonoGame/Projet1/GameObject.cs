@@ -12,6 +12,7 @@ namespace Projet1
     {
         public int vie;
         public bool estVivant;
+        public bool estMort;
         public Texture2D sprite;
         public Vector2 position;
         public Vector2 vitesse;
