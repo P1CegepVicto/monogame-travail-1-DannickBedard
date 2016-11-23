@@ -305,8 +305,8 @@ namespace Projet2
                 //Colision entre balle enemy et heros
                 if (badBullet[i].GetRect().Intersects(heros.GetRect()))
                 {
-                    
-                    heros.vie = heros.vie - 1;
+                    badBullet[i].position = bad[i].position;
+                    heros.vie = heros.vie - 10;
                 }
                 if (heros.vie <= 0)
                 {
@@ -358,7 +358,7 @@ namespace Projet2
             spriteBatch.Draw(heros.sprite, heros.position, Color.White);
             
             spriteBatch.Draw(bullet.sprite, bullet.position += bullet.vitesse, Color.White);
-            spriteBatch.Draw(coeur.sprite, coeur.position);
+            
             for (int i = 0; i < nbenemy; i++)
             {
                 
