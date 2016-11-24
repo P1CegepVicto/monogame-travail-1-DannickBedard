@@ -89,7 +89,7 @@ namespace Projet2
             }
             bullet = new GameObject();
             bullet.estVivant = true;
-            bullet.position.X = heros.position.X;
+            bullet.position.X = -10;
             bullet.position.Y = heros.position.Y;
             bullet.vitesse.Y = 0;
             bullet.sprite = Content.Load<Texture2D>("laserGreen02.png");
@@ -98,7 +98,7 @@ namespace Projet2
             coeur.position.X = 0;
             coeur.position.Y = 500;
             coeur.sprite = Content.Load<Texture2D>("coeur/Coeur10px.png");
-            //bullet.sprite = Content.Load<Texture2D>("laserBlue12.png");
+           
 
             son = Content.Load<SoundEffect>("highDown");
             bombe = son.CreateInstance();

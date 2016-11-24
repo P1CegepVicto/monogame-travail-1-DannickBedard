@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -11,6 +12,9 @@ namespace Projet3
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        KeyboardState keys = new KeyboardState();
+        KeyboardState previousKeys = new KeyboardState();
+        GameObjectPerso rambo;
 
         public Game1()
         {
@@ -21,6 +25,10 @@ namespace Projet3
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            this.graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
+            this.graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
+            this.graphics.ApplyChanges();
+            //this.graphics.ToggleFullScreen();
 
             base.Initialize();
         }
@@ -29,7 +37,11 @@ namespace Projet3
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            rambo = new GameObjectPerso();
+            rambo.direction = Vector2.Zero;
+            rambo.objectState = GameObjectPerso.etats.attentDroite;
+            rambo.position = new Rectangle(450, 590, 450, 590); //Position initial de Rambo
+            rambo.sprite = Content.Load<Texture2D>("Sprite.Sheet.png");
             // TODO: use this.Content to load your game content here
         }
 
