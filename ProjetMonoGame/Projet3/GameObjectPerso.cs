@@ -21,7 +21,7 @@ namespace Projet3
         }
         public etats objectState;
 
-        //Compteur qui changeras le sprite affiché
+        //Compteur 
         public int cpt = 0;
 
         //Gestion des tableaux des sprite (chaque sprite est un rectangle dans le tableeau
