@@ -43,6 +43,7 @@ namespace Projet3
             rambo.objectState = GameObjectPerso.etats.attentDroite;
             rambo.position = new Rectangle(209, 253, 167, 256); //Position initial de Rambo
             rambo.sprite = Content.Load<Texture2D>("SpriteSheet.png");
+            rambo.spriteAfficher = rambo.tabAttenteDroite[rambo.waitState];
             // TODO: use this.Content to load your game content here
         }
 
@@ -75,37 +76,16 @@ namespace Projet3
             if (Keyboard.GetState().IsKeyDown(Keys.D))
             {
                 rambo.direction.X = 2;
-
                 rambo.objectState = GameObjectPerso.etats.runDroite;
-                rambo.spriteAfficher = rambo.tabAttenteDroite[rambo.runState];
-
+                rambo.spriteAfficher = rambo.tabRunDroit[rambo.runState];
             }
-                if (keys.IsKeyUp(Keys.D) && previousKeys.IsKeyDown(Keys.D))
-                {
-                    rambo.direction.X = 0;
-                    rambo.objectState = GameObjectPerso.etats.attentDroite;
-                }
+            if (keys.IsKeyUp(Keys.D) && previousKeys.IsKeyDown(Keys.D))
+            {
+                rambo.direction.X = 0;
+                rambo.objectState = GameObjectPerso.etats.attentDroite;
+                rambo.spriteAfficher = rambo.tabAttenteDroite[rambo.waitState];
+            }
 
-                if (rambo.objectState == GameObjectPerso.etats.attentDroite)
-                {
-                    rambo.spriteAfficher = rambo.tabAttenteDroite[rambo.waitState];
-
-                }
-                if (rambo.objectState == GameObjectPerso.etats.runDroite)
-                {
-                    if (rambo.runState == 1)
-                        rambo.spriteAfficher = new Rectangle(60, 30, 65, 65);
-                    if (rambo.runState == 2)
-                        rambo.spriteAfficher = new Rectangle(130, 30, 65, 65);
-                    if (rambo.runState == 3)
-                        rambo.spriteAfficher = new Rectangle(193, 30, 65, 65);
-                    if (rambo.runState == 4)
-                        rambo.spriteAfficher = new Rectangle(260, 30, 65, 65);
-                    if (rambo.runState == 5)
-                        rambo.spriteAfficher = new Rectangle(320, 30, 65, 65);
-                    if (rambo.runState == 6)
-                        rambo.spriteAfficher = new Rectangle(385, 30, 65, 65);
-                }
                 //Compteur permettant de gérer le changement d'images
                 rambo.cpt++;
                 if (rambo.cpt == 6)//vitesse de déplacement

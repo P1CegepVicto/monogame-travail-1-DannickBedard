@@ -26,7 +26,7 @@ namespace Projet3
 
         //Gestion des tableaux des sprite (chaque sprite est un rectangle dans le tableeau
         public int runState = 0;//état de départ
-        public int nbEtatRun = 3; //combien il y a de rectangle pour l'état courir
+        public int nbEtatRun = 4; //combien il y a de rectangle pour l'état courir
         public Rectangle[] tabRunBas =
         {
             new Rectangle(0,0,196,240),
