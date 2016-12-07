@@ -17,7 +17,7 @@ namespace Projet3
         public Rectangle spriteAfficher;//le rectangle affiché à l'écran
         public enum etats
         {
-            attentDroite,attenteGauche,runDroite,RunGauche
+            attentDroite,attenteGauche,attenteHaut, attenteBas,runDroite,RunGauche,RunHaut, RunBas
         }
         public etats objectState;
 
@@ -36,24 +36,24 @@ namespace Projet3
         };
         public Rectangle[] tabRunDroit =
         {
-            new Rectangle(0,253,167,256),
+            new Rectangle(14,253,167,256),
             new Rectangle(209,253,167,256),
             new Rectangle(434,253,167,256),
             new Rectangle(629,253,167,256),
         };
         public Rectangle[] tabRunGauche =
         {
-            new Rectangle(0,777,167,226),
-            new Rectangle(209,777,167,226),
-            new Rectangle(434,777,167,226),
-            new Rectangle(629,777,167,226),
+            new Rectangle(14,521,167,250),
+            new Rectangle(209,521,167,250),
+            new Rectangle(434,521,167,250),
+            new Rectangle(629,521,167,250),
         };
         public Rectangle[] tabRunHaut =
         {//1850
-            new Rectangle(0,1030,196,227),
-            new Rectangle(209,1030,212,227),
-            new Rectangle(434,1030,196,227),
-            new Rectangle(629,1030,212,227),
+            new Rectangle(0,803,210,250),
+            new Rectangle(210,789,210,250),
+            new Rectangle(435,803,195,250),
+            new Rectangle(630,789,210,250),
         };
 
         public int waitState = 0;
@@ -63,11 +63,11 @@ namespace Projet3
         };
         public Rectangle[] tabAttenteGauche =
         {
-              new Rectangle(0,777,167,226)
+              new Rectangle(14,521,167,250)
         };
         public Rectangle[] tabAttenteHaut =
         {
-               new Rectangle(209,1030,212,227)
+               new Rectangle(210,789,210,250)
         };
         public Rectangle[] tabAttenteBas =
         {
