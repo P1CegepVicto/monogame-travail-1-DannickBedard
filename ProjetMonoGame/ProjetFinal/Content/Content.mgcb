@@ -25,3 +25,9 @@
 /processorParam:Quality=Best
 /build:highDown.mp3
 
+#begin Heros.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Heros.mp3
+

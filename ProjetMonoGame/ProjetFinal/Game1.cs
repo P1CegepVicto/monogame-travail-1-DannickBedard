@@ -21,7 +21,10 @@ namespace ProjetFinal
         GameObject background;
         GameObject background2;
         GameObject[] enemy;
+        GameObject start;
         SoundEffect son;
+        SoundEffect song;
+        SoundEffectInstance play;
         SoundEffectInstance bombe;
         SpriteFont font;
         int nbenemy = 1;
@@ -39,8 +42,8 @@ namespace ProjetFinal
             // TODO: Add your initialization logic here
             this.graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             this.graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
-            this.graphics.ApplyChanges();
-            //this.graphics.ToggleFullScreen();
+           // this.graphics.ApplyChanges();
+            this.graphics.ToggleFullScreen();
             base.Initialize();
         }
 
@@ -59,9 +62,13 @@ namespace ProjetFinal
 
             background2 = new GameObject();
             background2.position.X = 0;
-            background2.position.Y = 1080;
+            background2.position.Y =0;
            // background2.vitesse.Y = -2;
             background2.sprite = Content.Load<Texture2D>("BackSpace.jpg");
+            start = new GameObject();
+            start.estVivant = true;
+            start.position.X = 0;
+            start.position.Y = 0;
 
             heros = new GameObject();
             heros.estVivant = true;
@@ -107,7 +114,9 @@ namespace ProjetFinal
             coeur.position.Y = 500;
             coeur.sprite = Content.Load<Texture2D>("coeur/Coeur10px.png");
 
-
+            song = Content.Load<SoundEffect>("Heros");
+            play = song.CreateInstance();
+            song.Play();
             son = Content.Load<SoundEffect>("highDown");
             bombe = son.CreateInstance();
 
@@ -127,14 +136,27 @@ namespace ProjetFinal
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             // TODO: Add your update logic here
+            UpdateStart();
             UpdateBackground();
-            MouvementHeros(gameTime);
-            Mouvementbad(gameTime);
-            LimiteFenetreHeros();
-            Colision();
-            Respawn();
+           
+            if (start.estVivant == false)
+            {
+                MouvementHeros(gameTime);
+                Mouvementbad(gameTime);
+                LimiteFenetreHeros();
+                Colision();
+                Respawn();
+            }
             base.Update(gameTime);
 
+        }
+        public void UpdateStart()
+        {
+            if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+            {
+                start.estVivant = false;
+                heros.estVivant = true;
+            }
         }
         public void LimiteFenetreHeros()
         {
@@ -205,18 +227,20 @@ namespace ProjetFinal
         public void Mouvementbad(GameTime gameTime)
         {
             Random de = new Random();
-
-            for (int j = 0; j < bad.Length; j++)
+            if (start.estVivant == false)
             {
-                if (nbenemy * 2 < gameTime.TotalGameTime.Seconds && nbenemy < bad.Length)
+                for (int j = 0; j < bad.Length; j++)
                 {
-                    bad[nbenemy].position.X = 1;
-                    bad[nbenemy].position.Y = 0;
-                    bad[nbenemy].vitesse.X = 10;
-                    bad[nbenemy].vitesse.Y = 0;
-                    bad[nbenemy].position += bad[nbenemy].vitesse;
-                    bad[nbenemy].estMort = false;
-                    nbenemy++;
+                    if (nbenemy * 2 < gameTime.TotalGameTime.Seconds && nbenemy < bad.Length)
+                    {
+                        bad[nbenemy].position.X = 1;
+                        bad[nbenemy].position.Y = 0;
+                        bad[nbenemy].vitesse.X = 10;
+                        bad[nbenemy].vitesse.Y = 0;
+                        bad[nbenemy].position += bad[nbenemy].vitesse;
+                        bad[nbenemy].estMort = false;
+                        nbenemy++;
+                    }
                 }
             }
             for (int i = 0; i < bad.Length; i++)
@@ -282,15 +306,15 @@ namespace ProjetFinal
         public void UpdateBackground()
         {
             background.vitesse.X = -2;
-            background2.vitesse.X = -2;
             
-            if(background.position.X < 0)
+            
+            if(background.position.X <0)
             {
                 background2.position.X = background.position.X + background.sprite.Width;
             }
             if (background.position.X >= 0)
             {
-                background2.position.X = background.position.X - background.sprite.Width;
+                background2.position.X = background.position.X - (background.sprite.Width-3);
             }
             if (background2.position.X < 0)
             {
@@ -298,10 +322,10 @@ namespace ProjetFinal
             }
             if (background2.position.X >= 0)
             {
-                background.position.X = background2.position.X - background2.sprite.Width;
+                background.position.X = background2.position.X - (background2.sprite.Width-3);
             }
             background.position += background.vitesse;
-            background2.position += background2.vitesse;
+          
         }
         public void Colision()
         {
@@ -311,11 +335,18 @@ namespace ProjetFinal
                 //Colision entre balle heros et enemy
                 if (bullet.GetRect().Intersects(bad[i].GetRect()))
                 {
+                    if (bad[i].estVivant == true)
+                    {
+                        compteurEnemyTuer++;
+                    }
                     bad[i].estVivant = false;
                     bad[i].vitesse.X = 0;
                     bad[i].vitesse.Y = 2;
                     bad[i].estMort = true;
-                    compteurEnemyTuer++;
+                    bullet.position.X = heros.position.X;
+                    bullet.position.Y = heros.position.Y;
+                    bullet.estVivant = true;
+                    
                 }
                 if (bad[i].estVivant == false)
                 {
@@ -356,12 +387,14 @@ namespace ProjetFinal
             {
                 if (heros.position.Y > fenetre.Bottom + graphics.GraphicsDevice.DisplayMode.Height - 142)
                 {
+                    start.estVivant = true;
                     heros.vitesse.X = 0;
                     heros.vitesse.Y = 0;
                     heros.position.X = 20;
                     heros.position.Y = 500;
-                    heros.estVivant = true;
+                    
                     heros.vie = 100;
+                    compteurEnemyTuer = 0;
                 }
             }
         }
@@ -375,6 +408,7 @@ namespace ProjetFinal
             BulletEnemy();
             Bullet();
 
+           
             spriteBatch.Draw(background.sprite, background.position, Color.White);
             spriteBatch.Draw(background2.sprite, background2.position,effects:SpriteEffects.FlipHorizontally);
             spriteBatch.Draw(heros.sprite, heros.position, Color.White);
@@ -399,6 +433,15 @@ namespace ProjetFinal
                     spriteBatch.Draw(badBullet[i].sprite, badBullet[i].position += badBullet[i].vitesse, Color.White);
                 }
             }
+            if (start.estVivant == true)
+            {
+                spriteBatch.DrawString(font, "Press ENTER to begin".ToString(), new Vector2(860, 450), Color.White);
+             if (heros.estVivant == false )
+                {
+                    spriteBatch.DrawString(font, "GAME OVER".ToString(), new Vector2(860, 540), Color.White);
+                }   
+            }
+            spriteBatch.DrawString(font, compteurEnemyTuer.ToString(), new Vector2(960,0 ), Color.White);
 
             //Écrire le temps dans le jeux
             #region Time
